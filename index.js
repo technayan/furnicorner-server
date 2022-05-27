@@ -42,6 +42,15 @@ async function run() {
             res.send(result);
         })
 
+        // Multiple Product API
+        app.get('/products/:email', async(req, res) => {
+            const email = req.params.email;
+            const query = {email: email};
+            const cursor = productCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         // Post API
         app.post('/products', async (req, res) => {
             const newProduct = req.body;
@@ -68,6 +77,16 @@ async function run() {
             const result = await productCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         })
+
+        // Delete API
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await productCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        
     
     }
     finally {
