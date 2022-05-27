@@ -27,7 +27,7 @@ async function run() {
         const productCollection = client.db('furniCorner').collection('products');
         
         // APIs
-        app.get('/services', async (req, res) => {
+        app.get('/products', async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
@@ -35,15 +35,22 @@ async function run() {
         });
 
         // Single product api
-        app.get('/service/:id', async(req, res) => {
+        app.get('/product/:id', async(req, res) => {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await productCollection.findOne(query);
             res.send(result);
         })
 
+        // Post API
+        app.post('/products', async (req, res) => {
+            const newProduct = req.body;
+            const result = await productCollection.insertOne(newProduct);
+            res.send(result);
+        })
+
         // Update
-        app.put('/service/:id', async(req, res) => {
+        app.put('/product/:id', async(req, res) => {
             const id = req.params.id;
             const updatedProduct = req.body;
             const filter = {_id: ObjectId(id)};
@@ -61,6 +68,7 @@ async function run() {
             const result = await productCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         })
+    
     }
     finally {
 
